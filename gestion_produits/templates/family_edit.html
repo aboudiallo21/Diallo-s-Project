@@ -1,0 +1,21 @@
+<!-- family_edit.html -->
+{% extends 'base.html' %}
+
+{% block title %}Édition de Famille{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Édition de Famille</h1>
+    <form method="post">
+        {% csrf_token %}
+        <!-- Vos champs de formulaire -->
+        <div class="mb-3">
+            <label for="name" class="form-label">Nom</label>
+            <input type="text" class="form-control" id="name" name="name">
+        </div>
+        <!-- Ajoutez d'autres champs de formulaire si nécessaire -->
+
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+</div>
+{% endblock %}

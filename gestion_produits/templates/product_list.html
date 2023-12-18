@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Produits{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Liste des Produits</h1>
+    <a href="{% url 'product_new' %}" class="btn btn-primary mb-3">Nouveau Produit</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Description</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>{{ product.price }}</td>
+                <!-- Actions pour chaque produit -->
+                <td>
+                    <a href="{% url 'product_detail' pk=product.pk %}" class="btn btn-info btn-sm">Détails</a>
+                    <!-- Ajoutez d'autres liens pour l'édition, la suppression, etc., selon vos besoins -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

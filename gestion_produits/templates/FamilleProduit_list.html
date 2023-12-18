@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Familles de Produits</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary p-5">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">SID32</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/department">Department</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/module">Module</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <h1>Liste des Familles de Produits</h1>
+    <ul>
+        {% for famille in familles %}
+            <li>{{ famille.nom }}</li>
+        {% empty %}
+            <li>Aucune famille de produits enregistrée.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

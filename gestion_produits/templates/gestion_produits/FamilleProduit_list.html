@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Familles de Produits</title>
+</head>
+<body>
+    <h1>Liste des Familles de Produits</h1>
+    <ul>
+        {% for famille in FamilleProduit_list %}
+            <li>{{ famille.nom }}</li>
+        {% empty %}
+            <li>Aucune famille de produits enregistrée.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
