@@ -1,4 +1,3 @@
-<!-- family_list.html -->
 {% extends 'base.html' %}
 
 {% block title %}Liste des Familles de Produits{% endblock %}
@@ -15,6 +14,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Nom</th>
                 <th scope="col">Description</th>
+                <th scope="col">Actions</th>
                 <!-- Ajoutez d'autres colonnes si nécessaire -->
             </tr>
         </thead>
@@ -26,6 +26,13 @@
                 <td>{{ family.name }}</td>
                 <td>{{ family.description }}</td>
                 <!-- Affichez d'autres données si nécessaire -->
+                <td>
+                    <a href="{% url 'family_edit' pk=family.pk %}" class="btn btn-sm btn-outline-primary me-2">Éditer</a>
+                    <form action="{% url 'family_delete' pk=family.pk %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette famille de produits ?')">Supprimer</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

@@ -3,6 +3,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Family, Product
 from .forms import FamilyForm, ProductForm
+from .utils import calculate_price_index
+
 
 def family_list(request):
     families = Family.objects.all()
@@ -49,15 +51,25 @@ def family_delete(request, pk):
 
 def product_list(request):
     products = Product.objects.all()
-    return render(request, 'product_list.html', {'products': products})
+    prices = [product.price for product in products]  # Récupération des prix des produits
+    price_index = calculate_price_index(prices)  # Calcul de l'indice de prix
+
+    context = {
+        'products': products,
+        'price_index': price_index,
+    }
+    return render(request, 'product_list.html', context)
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'product_detail.html', {'product': product})
 
 def product_new(request):
+    print(request.method)
     if request.method == "POST":
         form = ProductForm(request.POST)
+        print(form.is_valid())
+        print(form)
         if form.is_valid():
             product = form.save(commit=False)
             product.save()
@@ -82,3 +94,4 @@ def product_delete(request, pk):
     product = get_object_or_404(Product, pk=pk)
     product.delete()
     return redirect('product_list')
+

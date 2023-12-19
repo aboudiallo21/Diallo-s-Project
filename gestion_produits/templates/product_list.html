@@ -8,26 +8,32 @@
     <a href="{% url 'product_new' %}" class="btn btn-primary mb-3">Nouveau Produit</a>
 
     <table class="table">
+        <!-- Table header -->
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Nom</th>
                 <th scope="col">Description</th>
                 <th scope="col">Prix</th>
+                <!-- Ajoutez d'autres colonnes si nécessaire -->
                 <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
+            <!-- Iterate over products and display data -->
             {% for product in products %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description }}</td>
                 <td>{{ product.price }}</td>
-                <!-- Actions pour chaque produit -->
+                <!-- Affichez d'autres données si nécessaire -->
                 <td>
-                    <a href="{% url 'product_detail' pk=product.pk %}" class="btn btn-info btn-sm">Détails</a>
-                    <!-- Ajoutez d'autres liens pour l'édition, la suppression, etc., selon vos besoins -->
+                    <a href="{% url 'product_edit' pk=product.pk %}" class="btn btn-sm btn-outline-primary me-2">Éditer</a>
+                    <form action="{% url 'product_delete' pk=product.pk %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')">Supprimer</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

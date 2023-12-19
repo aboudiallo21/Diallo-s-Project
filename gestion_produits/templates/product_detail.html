@@ -1,10 +1,18 @@
-<!-- product_detail.html -->
 {% extends 'base.html' %}
 
 {% block title %}Détails du Produit{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <!-- Affichage détaillé du produit -->
+    <h1>Détails du Produit</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text"><strong>Description:</strong> {{ product.description }}</p>
+            <p class="card-text"><strong>Prix:</strong> {{ product.price }}</p>
+            <!-- Afficher d'autres informations spécifiques du produit si nécessaire -->
+        </div>
+    </div>
+    <a href="{% url 'product_edit' pk=product.pk %}" class="btn btn-primary mt-3">Modifier</a>
 </div>
 {% endblock %}

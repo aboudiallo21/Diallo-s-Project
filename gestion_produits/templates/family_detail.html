@@ -1,12 +1,16 @@
-<!-- family_detail.html -->
 {% extends 'base.html' %}
 
 {% block title %}Détails de la Famille{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <!-- Display details of the family -->
     <h1>Détails de la Famille</h1>
-    <!-- Ajoutez ici l'affichage des détails de la famille -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Nom: {{ family.name }}</h5>
+            <!-- Affichez d'autres détails de la famille en fonction de votre modèle Family -->
+        </div>
+    </div>
 </div>
+
 {% endblock %}
