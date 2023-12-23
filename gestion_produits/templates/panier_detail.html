@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Détails du Panier{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Détails du Panier</h1>
+
+    <div>
+        <h5>Code Panier: {{ panier.code_panier }}</h5>
+        <p>Label: {{ panier.label }}</p>
+        <p>Description: {{ panier.description }}</p>
+        <!-- Afficher les produits associés si nécessaire -->
+    </div>
+</div>
+{% endblock %}

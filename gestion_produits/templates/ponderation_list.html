@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Ajouter une Pondération{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title mb-4">Liste des Pondérations</h1>
+            <ul class="list-group">
+                {% for ponderation in ponderations %}
+                    <li class="list-group-item">
+                        <!-- Affichez ici les détails de chaque pondération -->
+                        <p>Produit: {{ ponderation.product.name }}</p>
+                        <p>Panier: {{ ponderation.panier.label }}</p>
+                        <p>Pondération: {{ ponderation.ponderation }}</p>
+                        <!-- Ajoutez ici des liens pour éditer ou supprimer la pondération -->
+                        <a href="{% url 'ponderation_edit' pk=ponderation.pk %}">Éditer</a>
+                        <a href="{% url 'ponderation_delete' pk=ponderation.pk %}">Supprimer</a>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Aucune pondération disponible pour le moment.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Ajouter une nouvelle pondération</h2>
+                <a href="{% url 'ponderation_add' %}" class="btn btn-primary">Ajouter une pondération</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

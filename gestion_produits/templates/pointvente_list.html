@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Points de Vente{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Liste des Points de Vente</h1>
+
+    <ul>
+        {% for point_de_vente in points_de_vente %}
+            <li>
+                <h3>{{ point_de_vente.zone }}</h3>
+                <p>{{ point_de_vente.gps }}</p>
+                <!-- Afficher d'autres détails selon les besoins -->
+            </li>
+        {% empty %}
+            <li>Aucun point de vente disponible pour le moment.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'pointvente_add' %}" class="btn btn-primary">Ajouter un Point de Vente</a>
+</div>
+{% endblock %}

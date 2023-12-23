@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Supprimer une Pondération{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Supprimer une Pondération</h1>
+
+    <p>Êtes-vous sûr de vouloir supprimer cette pondération ?</p>
+    <p>Produit: {{ ponderation.product }}</p>
+    <p>Panier: {{ ponderation.panier }}</p>
+    <p>Pondération: {{ ponderation.ponderation }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmer la suppression</button>
+    </form>
+
+    <a href="{% url 'ponderation_list' %}">Annuler</a>
+</div>
+{% endblock %}

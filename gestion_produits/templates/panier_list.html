@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Paniers{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Liste des Paniers</h1>
+
+    <ul class="list-group">
+        {% for panier in paniers %}
+            <li class="list-group-item">
+                <h5>Code Panier: {{ panier.code_panier }}</h5>
+                <p>Label: {{ panier.label }}</p>
+                <p>Description: {{ panier.description }}</p>
+                <!-- Affichage des produits liés à ce panier -->
+                <ul>
+                    {% for product in panier.products.all %}
+                        <li>{{ product.name }}</li>
+                        <!-- Vous pouvez afficher d'autres détails du produit si nécessaire -->
+                    {% empty %}
+                        <li>Aucun produit sélectionné pour ce panier.</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'panier_edit' pk=panier.pk %}" class="btn btn-sm btn-outline-primary me-2">Modifier</a>
+                <a href="{% url 'panier_delete' pk=panier.pk %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+            </li>
+        {% empty %}
+            <li class="list-group-item">Aucun panier disponible pour le moment.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'panier_add' %}" class="btn btn-primary mt-3">Ajouter un panier</a>
+</div>
+{% endblock %}

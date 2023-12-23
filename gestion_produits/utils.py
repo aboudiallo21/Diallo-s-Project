@@ -1,8 +1,9 @@
 def calculate_price_index(prices):
-    if not prices:
-        return None
+    total_value = sum(price.value for price in prices)
+    num_prices = len(prices)
+    if num_prices > 0:
+        price_index = total_value / num_prices
+    else:
+        price_index = 0
+    return price_index
 
-    # Calcul de l'indice des prix à la consommation (IPC) simple
-    index = sum(prices) / len(prices)  # Moyenne des prix
-
-    return index

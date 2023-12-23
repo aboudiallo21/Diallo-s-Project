@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Prix{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Liste des Prix</h1>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for price in prices %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ price.product.name }}</h5>
+                        <p class="card-text">Valeur: {{ price.value }}</p>
+                        <p class="card-text">Date: {{ price.date }}</p>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'price_detail' pk=price.pk %}" class="btn btn-outline-primary">Détails</a>
+                            <a href="{% url 'price_edit' pk=price.pk %}" class="btn btn-outline-secondary">Modifier</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <p class="card-text fs-5">Aucun prix disponible pour le moment.</p>
+                        <a href="{% url 'price_add' %}" class="btn btn-primary">Ajouter un prix</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if prices %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Indice de Prix</h5>
+                        <p class="card-text">Indice: {{ price_index }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

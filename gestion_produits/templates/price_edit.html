@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier Prix{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title mb-4">Modifier Prix</h1>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_code_price" class="form-label"> Price:{{ price.product.name }}</label>
+
+                </div>
+                <div class="mb-3">
+                    <label for="id_value" class="form-label">Value</label>
+                    {{ form.value }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_date" class="form-label">Date</label>
+                    {{ form.date }}
+                </div>
+                <!-- Ajoutez d'autres champs du formulaire si nécessaire -->
+
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

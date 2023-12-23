@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Ajouter un Point de Vente{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Ajouter un Point de Vente</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ pointvente_form.as_p }}
+        <button type="submit">Enregistrer</button>
+    </form>
+</div>
+{% endblock %}
