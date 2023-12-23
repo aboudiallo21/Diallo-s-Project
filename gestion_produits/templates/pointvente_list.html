@@ -6,18 +6,26 @@
 <div class="container mt-5">
     <h1>Liste des Points de Vente</h1>
 
-    <ul>
+    <ul class="list-group mt-3">
         {% for point_de_vente in points_de_vente %}
-            <li>
-                <h3>{{ point_de_vente.zone }}</h3>
-                <p>{{ point_de_vente.gps }}</p>
-                <!-- Afficher d'autres détails selon les besoins -->
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3>{{ point_de_vente.zone }}</h3>
+                        <p>{{ point_de_vente.gps }}</p>
+                        <!-- Afficher d'autres détails selon les besoins -->
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <a href="{% url 'pointvente_edit' pk=point_de_vente.pk %}" class="btn btn-outline-primary">Editer</a>
+                        <a href="{% url 'pointvente_delete' pk=point_de_vente.pk %}" class="btn btn-outline-danger">Supprimer</a>
+                    </div>
+                </div>
             </li>
         {% empty %}
-            <li>Aucun point de vente disponible pour le moment.</li>
+            <li class="list-group-item">Aucun point de vente disponible pour le moment.</li>
         {% endfor %}
     </ul>
 
-    <a href="{% url 'pointvente_add' %}" class="btn btn-primary">Ajouter un Point de Vente</a>
+    <a href="{% url 'pointvente_add' %}" class="btn btn-primary mt-3">Ajouter un Point de Vente</a>
 </div>
 {% endblock %}

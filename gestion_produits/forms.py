@@ -4,7 +4,7 @@ from .models import Family, Product, Panier, Ponderation, Price, pointvente
 class FamilyForm(forms.ModelForm):
     class Meta:
         model = Family
-        fields = ['name']
+        fields = ['name','description']
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -39,4 +39,4 @@ class PriceForm(forms.ModelForm):
 
     class Meta:
         model = Price
-        fields = ['value', 'date', 'product','zone']
+        fields = ['value', 'date', 'product','zone','ponderation']

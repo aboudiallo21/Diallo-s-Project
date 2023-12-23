@@ -240,3 +240,30 @@ def pointvente_add(request):
         pointvente_form = pointventeForm()
 
     return render(request, 'pointvente_add.html', {'pointvente_form': pointvente_form})
+
+def pointvente_delete(request, pk):
+    pointvente = get_object_or_404(pointvente, pk=pk)
+    if request.method == 'POST':
+        pointvente.delete()
+        return redirect('pointvente_list')
+    return render(request, 'pointvente_delete.html', {'pointvente': pointvente})
+
+
+
+def pointvente_edit(request, pk):
+    pointvente = get_object_or_404(pointvente, pk=pk)
+    if request.method == "POST":
+        form = pointventeForm(request.POST, instance=pointvente)
+        if form.is_valid():
+            pointvente = form.save(commit=False)
+            pointvente.save()
+            return redirect('pointvente_list')
+    else:
+        form = pointventeForm(instance=pointvente)
+    return render(request, 'pointvente_edit.html', {'form': form})
+
+def dashboard(request):
+    # Récupérez les prix des produits depuis votre modèle Price
+    prices = Price.objects.all()  # Modifiez cela en fonction de votre logique d'extraction des données
+
+    return render(request, 'dashboard.html', {'prices': prices})

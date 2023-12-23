@@ -13,7 +13,7 @@
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
                     <h5>{{ product.name }}</h5>
-                    <p>Prix: {{ product.price.value }}</p> <!-- Utilisez product.price.value pour afficher le prix -->
+                   <!-- Utilisez product.price.value pour afficher le prix -->
                 </div>
                 <div>
                     <a href="{% url 'product_edit' pk=product.pk %}" class="btn btn-sm btn-outline-primary me-2">Éditer</a>
@@ -26,12 +26,6 @@
         {% endfor %}
     </ul>
 
-    <div class="mt-4">
-        {% if price_index %}
-            <p class="fw-bold">Indice de prix calculé: {{ price_index }}</p>
-        {% else %}
-            <p>Aucun indice de prix disponible pour le moment.</p>
-        {% endif %}
-    </div>
+
 </div>
 {% endblock %}

@@ -30,5 +30,8 @@ urlpatterns = [
     path('panier/new/', views.panier_add, name='panier_add'),
     path('pointvente/', views.pointvente_list, name='pointvente_list'),
     path('pointvente/add/', views.pointvente_add, name='pointvente_add'),
+    path('pointvente/<int:pk>/edit/', views.pointvente_edit, name='pointvente_edit'),
+    path('pointvente/<int:pk>/delete/', views.pointvente_delete, name='pointvente_delete'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 
 ]
