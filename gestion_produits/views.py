@@ -263,7 +263,17 @@ def pointvente_edit(request, pk):
     return render(request, 'pointvente_edit.html', {'form': form})
 
 def dashboard(request):
-    # Récupérez les prix des produits depuis votre modèle Price
-    prices = Price.objects.all()  # Modifiez cela en fonction de votre logique d'extraction des données
+    # Récupérer les données des prix et des noms de produits
+    prices = Price.objects.all()
 
-    return render(request, 'dashboard.html', {'prices': prices})
+    # Créer des listes pour les noms des produits et leurs prix associés
+    produits = [price.product.name for price in prices]
+    prix = [price.value for price in prices]
+
+    # Passer les données récupérées au contexte du template
+    context = {
+        'produits': produits,
+        'prix': prix,
+    }
+
+    return render(request, 'dashboard.html', context)

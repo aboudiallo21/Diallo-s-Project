@@ -52,9 +52,12 @@ class Ponderation(models.Model):
 class pointvente(models.Model):
     DEFAULT_ZONE = 'DEFAULT_ZONE'
     DEFAULT_GPS = 'DEFAULT_GPS'
-
+    DEFAULT_WILAYA = 'DEFAULT_WILAYA'
+    DEFAULT_MOUGATAA = 'DEFAULT_MOUGATAA    '
     zone = models.CharField(max_length=100, default=DEFAULT_ZONE)
     gps = models.CharField(max_length=100, default=DEFAULT_GPS)
+    wilaya = models.CharField(max_length=100,default=DEFAULT_WILAYA)  # Champ pour la wilaya
+    mougataa = models.CharField(max_length=100,default=DEFAULT_MOUGATAA )
 
     def __str__(self):
         return f"{self.zone} "

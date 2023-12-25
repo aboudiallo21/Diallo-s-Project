@@ -4,28 +4,35 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1>Liste des Points de Vente</h1>
+    <h1 class="mb-4">Liste des Points de Vente</h1>
 
-    <ul class="list-group mt-3">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
         {% for point_de_vente in points_de_vente %}
-            <li class="list-group-item">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h3>{{ point_de_vente.zone }}</h3>
-                        <p>{{ point_de_vente.gps }}</p>
-                        <!-- Afficher d'autres détails selon les besoins -->
-                    </div>
-                    <div class="btn-group" role="group" aria-label="Actions">
-                        <a href="{% url 'pointvente_edit' pk=point_de_vente.pk %}" class="btn btn-outline-primary">Editer</a>
-                        <a href="{% url 'pointvente_delete' pk=point_de_vente.pk %}" class="btn btn-outline-danger">Supprimer</a>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ point_de_vente.zone }}</h5>
+                        <p class="card-text">{{ point_de_vente.gps }}</p>
+                        <p class="card-text">{{ point_de_vente.wilaya }}</p>
+                        <p class="card-text">{{ point_de_vente.mougataa }}</p>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'pointvente_edit' pk=point_de_vente.pk %}" class="btn btn-sm btn-outline-primary">Editer</a>
+                            <a href="{% url 'pointvente_delete' pk=point_de_vente.pk %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                        </div>
                     </div>
                 </div>
-            </li>
+            </div>
         {% empty %}
-            <li class="list-group-item">Aucun point de vente disponible pour le moment.</li>
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <p class="card-text fs-5">Aucun point de vente disponible pour le moment.</p>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
-    </ul>
+    </div>
 
-    <a href="{% url 'pointvente_add' %}" class="btn btn-primary mt-3">Ajouter un Point de Vente</a>
+    <a href="{% url 'pointvente_add' %}" class="btn btn-primary mt-4">Ajouter un Point de Vente</a>
 </div>
 {% endblock %}

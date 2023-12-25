@@ -12,33 +12,29 @@
     </div>
 
     <script>
-        // Données à afficher dans le graphique
-        const produits = ['Produit A', 'Produit B', 'Produit C'];
-        const prix = [10, 20, 15]; // Prix correspondant à chaque produit
+    // Récupérez les données des produits et de leurs prix depuis votre backend Django
+    const produits = {{ produits|safe }};
+    const prix = {{ prix|safe }};
 
-        // Création du graphique à barres
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: produits,
-                datasets: [{
-                    label: 'Prix des Produits',
-                    data: prix,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                // Options de configuration du graphique (titres, axes, etc.)
-                scales: {
-                    y: {
-                        beginAtZero: true // Démarre l'axe y à 0
-                    }
-                }
-            }
-        });
-    </script>
+    // Initialisez le graphique à l'aide de Chart.js
+    const ctx = document.getElementById('prix-produits-chart').getContext('2d');
+    const prixProduitsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: produits,
+            datasets: [{
+                label: 'Prix des Produits',
+                data: prix,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            // Options de configuration du graphique (titres, axes, etc.)
+        }
+    });
+</script>
+
 </body>
 </html>

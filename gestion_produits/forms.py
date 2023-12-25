@@ -30,7 +30,7 @@ class PonderationForm(forms.ModelForm):
 class pointventeForm(forms.ModelForm):
     class Meta:
         model = pointvente
-        fields = ['zone', 'gps']
+        fields = ['zone', 'gps','wilaya','mougataa']
 class PriceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PriceForm, self).__init__(*args, **kwargs)
