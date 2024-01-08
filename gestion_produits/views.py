@@ -315,7 +315,6 @@ def export_data(request):
 from django.contrib import messages
 from tablib import Dataset
 def import_data(request):
-    imported_data = []
     if request.method == 'POST':
         price_resource = PriceResource()
         dataset = Dataset()
@@ -326,16 +325,46 @@ def import_data(request):
 
         if not result.has_errors():
             price_resource.import_data(dataset, dry_run=False)  # Actually import now
-
             # Afficher les lignes et les colonnes du fichier importé
             for ligne in imported_data:
                 print(ligne)
 
             messages.success(request, 'Prices imported successfully')
+            # Stocker les données importées dans la session de l'utilisateur
+            request.session['imported_data'] = list(imported_data)
         else:
             messages.error(request, 'An error occurred during import')
 
-    return render(request, 'import.html', {'imported_data': imported_data})
+    # Récupérer les données importées de la session de l'utilisateur
+    imported_data = request.session.get('imported_data', [])
+
+    return render(request, 'price_list.html', {'imported_data': imported_data})
 
 
+import csv
+#from django.http import HttpResponse
+#from .models import Price
 
+#from django.shortcuts import render
+
+#from django.contrib import messages
+#from tablib import Dataset
+#from .resources import PriceResource
+
+#def import_prices(request):
+#    if request.method == 'POST':
+#        price_resource = PriceResource()
+#        dataset = Dataset()
+#        new_prices = request.FILES['myfile']
+
+#        imported_data = dataset.load(new_prices.read().decode('utf-8'), format='csv')
+#        result = price_resource.import_data(dataset, dry_run=True)  # Test the data import
+
+ #       if not result.has_errors():
+ #           price_resource.import_data(dataset, dry_run=False)  # Actually import now
+
+#            messages.success(request, 'Prices imported successfully')
+#        else:
+#            messages.error(request, 'An error occurred during import')
+
+#    return render(request, 'import.html', {'imported_data': imported_data})

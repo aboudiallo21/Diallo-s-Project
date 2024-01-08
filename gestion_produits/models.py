@@ -17,7 +17,6 @@ class Product(models.Model):
     name = models.CharField(max_length=100, default=DEFAULT_NAME)
     description = models.TextField(default=DEFAULT_DESCRIPTION)
     family = models.ForeignKey(Family, on_delete=models.CASCADE)
-
     def __str__(self):
         return self.name
 

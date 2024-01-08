@@ -34,9 +34,9 @@ urlpatterns = [
     path('pointvente/<int:pk>/delete/', views.pointvente_delete, name='pointvente_delete'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('house/', views.house, name='house'),
-    path('export-prices/', views.export_data, name='export_data'),
-    path('import-prices/', views.import_data, name='import_data'),
-
+    #path('export-prices/', views.export_data, name='export_data'),
+    #path('import-prices/', views.import_data, name='import_data'),
+    path('prices/import/', views.import_data, name='import_data'),
 
 
 ]
