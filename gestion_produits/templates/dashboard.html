@@ -1,40 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Graphique à Barres</title>
-    <!-- Ajouter le lien vers Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <div style="width: 800px; margin: 0 auto;">
-        <canvas id="myChart"></canvas>
-    </div>
-
-    <script>
-    // Récupérez les données des produits et de leurs prix depuis votre backend Django
-    const produits = {{ produits|safe }};
-    const prix = {{ prix|safe }};
-
-    // Initialisez le graphique à l'aide de Chart.js
-    const ctx = document.getElementById('prix-produits-chart').getContext('2d');
-    const prixProduitsChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: produits,
-            datasets: [{
-                label: 'Prix des Produits',
-                data: prix,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            // Options de configuration du graphique (titres, axes, etc.)
+<canvas id="myChart"></canvas>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Nombre de produits',
+            data: [],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
         }
-    });
-</script>
+    }
+});
 
-</body>
-</html>
+$.ajax({
+    url: "{% url 'product_count' %}",
+    success: function(data) {
+        chart.data.labels = data.labels;
+        chart.data.datasets[0].data = data.data;
+        chart.update();
+    }
+});
+</script>

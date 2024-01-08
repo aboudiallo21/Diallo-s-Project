@@ -277,3 +277,65 @@ def dashboard(request):
     }
 
     return render(request, 'dashboard.html', context)
+
+
+def house(request):
+    return render(request, 'index.html')
+
+
+def product_count(request):
+    data = {
+        "labels": [],
+        "data": [],
+    }
+    for family in Family.objects.all():
+        data["labels"].append(family.name)
+        data["data"].append(Product.objects.filter(family=family).count())
+    return JsonResponse(data)
+
+
+from .resources import PriceResource
+from django.http import HttpResponse
+from .resources import PriceResource
+
+#def export_data(request):
+#    price_resource = PriceResource()
+#    dataset = price_resource.export()
+#    response = HttpResponse(dataset.csv, content_type='text/csv')
+#    response['Content-Disposition'] = 'attachment; filename="prices.csv"'
+#    return response
+
+def export_data(request):
+    price_resource = PriceResource()
+    dataset = price_resource.export()
+    with open('prices.csv', 'w') as f:
+        f.write(dataset.csv)
+    return HttpResponse("Les données ont été exportées avec succès dans le fichier 'prices.csv' du répertoire racine du projet.")
+
+from django.contrib import messages
+from tablib import Dataset
+def import_data(request):
+    imported_data = []
+    if request.method == 'POST':
+        price_resource = PriceResource()
+        dataset = Dataset()
+        new_prices = request.FILES['myfile']
+
+        imported_data = dataset.load(new_prices.read().decode('utf-8'), format='csv')
+        result = price_resource.import_data(dataset, dry_run=True)  # Test the data import
+
+        if not result.has_errors():
+            price_resource.import_data(dataset, dry_run=False)  # Actually import now
+
+            # Afficher les lignes et les colonnes du fichier importé
+            for ligne in imported_data:
+                print(ligne)
+
+            messages.success(request, 'Prices imported successfully')
+        else:
+            messages.error(request, 'An error occurred during import')
+
+    return render(request, 'import.html', {'imported_data': imported_data})
+
+
+
