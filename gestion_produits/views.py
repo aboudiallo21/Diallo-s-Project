@@ -522,3 +522,46 @@ def family_export(request):
 
     # Retourner la réponse
     return response
+
+
+def product_import(request):
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Ce n\'est pas un fichier csv')
+            return redirect('product_import')
+
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+            _, created = Product.objects.update_or_create(
+                code_name=column[0],
+                name=column[1],
+                description=column[2],
+                family=Family.objects.get(name=column[3])
+            )
+        return redirect('product_list')
+    else:
+        return render(request, 'product_import.html')
+
+
+def product_export(request):
+    # Créer la réponse HTTP
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="products.csv"'
+
+    # Créer un écrivain CSV
+    writer = csv.writer(response)
+    # Écrire l'en-tête du fichier CSV
+    writer.writerow(['Code', 'Nom', 'Description', 'Famille'])
+
+    # Récupérer tous les produits
+    products = Product.objects.all()
+
+    # Écrire chaque produit dans le fichier CSV
+    for product in products:
+        writer.writerow([product.code_name, product.name, product.description, product.family.name])
+
+    # Retourner la réponse
+    return response

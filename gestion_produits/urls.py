@@ -47,4 +47,6 @@ urlpatterns = [
     path('price_chart/', views.prices, name='prices'),
     path('family/import/', views.family_import, name='family_import'),
     path('family/export/', views.family_export, name='family_export'),
+    path('product/import/', views.product_import, name='product_import'),
+    path('product/export/', views.product_export, name='product_export'),
 ]
