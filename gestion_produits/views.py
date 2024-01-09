@@ -308,9 +308,9 @@ from .resources import PriceResource
 def export_data(request):
     price_resource = PriceResource()
     dataset = price_resource.export()
-    with open('prices.csv', 'w') as f:
+    with open('aboudiallo.csv', 'w') as f:
         f.write(dataset.csv)
-    return HttpResponse("Les données ont été exportées avec succès dans le fichier 'prices.csv' du répertoire racine du projet.")
+    return HttpResponse("Les données ont été exportées avec succès dans le fichier 'aboudiallo.csv' du répertoire racine du projet.")
 
 from django.contrib import messages
 from tablib import Dataset
@@ -338,7 +338,7 @@ def import_data(request):
     # Récupérer les données importées de la session de l'utilisateur
     imported_data = request.session.get('imported_data', [])
 
-    return render(request, 'price_list.html', {'imported_data': imported_data})
+    return render(request, 'prices_list.html', {'imported_data': imported_data})
 
 
 import csv
@@ -368,3 +368,112 @@ import csv
 #            messages.error(request, 'An error occurred during import')
 
 #    return render(request, 'import.html', {'imported_data': imported_data})
+
+
+from django.views.generic import TemplateView
+from chartjs.views.lines import BaseLineChartView
+from .models import Price
+
+#class LineChartJSONView(BaseLineChartView):
+##    def get_labels(self):
+#        """Return labels for the x-axis."""
+        # Récupérer toutes les dates uniques des prix dans l'ordre
+#        dates = Price.objects.dates('date', 'day').order_by('date')
+#        labels = [date for date in dates]
+#        return labels
+
+#    def get_providers(self):
+#        """Return all unique products."""
+#        products = Price.objects.order_by('product').values('product').distinct()
+#        return [price['product'] for price in products]
+
+#    def get_data(self):
+#        """Return datasets to plot."""
+        # Récupérer tous les produits uniques
+#        products = self.get_providers()
+        # Créer une liste pour stocker les datasets
+#        datasets = []
+        # Pour chaque produit, créer un dataset
+#        for product in products:
+#            prices = Price.objects.filter(product__name=product).order_by('date')
+#            data = [price.value for price in prices]
+#            datasets.append(data)
+ #       return datasets
+
+#    def get_datasets(self, **kwargs):
+#        """Return datasets for the plot."""
+#        labels = self.get_labels()
+#        data = self.get_data()
+#        # Assurez-vous que les labels et les données sont de la même longueur
+#        assert len(labels) == len(data)
+#        # Créer les datasets
+#        datasets = []
+#        for i, product in enumerate(self.get_providers()):
+#            datasets.append({
+#                'label': product,
+#                'backgroundColor': 'rgba(75, 192, 192, 0.2)',
+#                'borderColor': 'rgba(75, 192, 192, 1)',
+#                'data': data[i],
+#                'fill': False,
+#            })
+#        return datasets
+
+#class LineChartView(TemplateView):
+#    template_name = 'line_chart.html'
+
+#line_chart = TemplateView.as_view(template_name='line_chart.html')
+#line_chart_json = LineChartJSONView.as_view()
+
+from django.shortcuts import render
+from django.views.generic import TemplateView
+
+class ChartView(TemplateView):
+    template_name = 'chart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['csv_file'] = "{% static 'aboudiallo.csv' %}"  # Remplacez par le chemin réel vers votre fichier CSV
+        return context
+
+
+# views.py
+from django.http import JsonResponse
+from django.db.models import Avg
+from django.db.models.functions import ExtractYear
+
+#def get_prices(request):
+#    prices_by_year = Price.objects.annotate(year=ExtractYear('date')).values('year').annotate(avg_price=Avg('value')).order_by('year')
+#    data = list(prices_by_year)  # convert QuerySet to list
+#    return JsonResponse(data, safe=False)  # JsonResponse expects a dictionary -- use safe=False to allow list
+
+def prices(request):
+    return render(request, 'prices.html')
+
+# views.py
+from django.shortcuts import render
+from django.db.models import Avg
+from django.db.models.functions import ExtractYear
+
+# views.py
+# views.py
+from django.shortcuts import render
+from django.db.models import Avg
+from django.db.models.functions import ExtractYear
+
+# views.py
+from django.shortcuts import render
+from django.db.models import Avg
+from django.db.models.functions import ExtractYear
+
+def get_price_data():
+    prices_by_year_and_product = Price.objects.annotate(year=ExtractYear('date')).values('year', 'product__name').annotate(avg_price=Avg('value')).order_by('product__name', 'year')
+    data = list(prices_by_year_and_product)  # convert QuerySet to list
+    return data
+
+def prices(request):
+    data = get_price_data()
+    return render(request, 'prices.html', {'data': data})
+
+def get_prices(request):
+    data = get_price_data()
+    return JsonResponse(data, safe=False)  # JsonResponse expects a dictionary -- use safe=False to allow list

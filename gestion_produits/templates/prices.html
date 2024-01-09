@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 style="margin-top: 2.9cm;">Évolution des prix entre 2022 et 2024</h1>
+    <select id="productSelect">
+        <!-- Les options seront ajoutées ici par le code JavaScript -->
+    </select>
+    <div class="chart-container" id="chartContainer">
+        <canvas id="myChart"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 0.5cm;
+        }
+        .chart-container canvas {
+            flex: 0 0 45%;  /* width: 45%, height: auto */
+            margin: 2.5%;  /* spacing between charts */
+        }
+    </style>
+    <script>
+        let myChart;
+
+        fetch('/prix/')
+            .then(response => response.json())
+            .then(data => {
+                let products = [...new Set(data.map(item => item.product__name))];  // get unique product names
+                let select = document.getElementById('productSelect');
+                products.forEach(product => {
+                    let option = document.createElement('option');
+                    option.text = product;
+                    select.add(option);
+                });
+                select.addEventListener('change', function() {
+                    let product = this.value;
+                    let productData = data.filter(item => item.product__name === product);
+                    let years = productData.map(item => item.year);
+                    let avg_prices = productData.map(item => item.avg_price);
+                    if (myChart) {
+                        myChart.destroy();  // destroy previous chart
+                    }
+                    let ctx = document.getElementById('myChart').getContext('2d');
+                    myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: years,
+                            datasets: [{
+                                label: 'Prix moyen de ' + product,
+                                data: avg_prices,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                });
+                select.dispatchEvent(new Event('change'));  // trigger change event to draw initial chart
+            });
+    </script>
+{% endblock %}

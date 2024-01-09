@@ -1,0 +1,37 @@
+product name,zone name,value,date,ponderation
+
+Carrotes,Maghama,100.0,2023-12-04,10
+
+Bergine,Kaedi,155.0,2023-12-20,11
+
+Tomates,Rosso,160.0,2023-12-23,12
+
+Gazoile,Nouakchott,500.0,2023-12-22,13
+
+Essence,Nouakchott,550.0,2023-12-23,14
+
+Transport taxi,Nouakchott,100.0,2023-12-20,16
+
+Carrotes,Maghama,98.0,2022-05-03,17
+
+Bergine,Kaedi,115.0,2022-05-03,18
+
+Tomates,Rosso,145.0,2022-05-03,19
+
+Gazoile,Nouakchott,450.0,2022-05-03,20
+
+Essence,Nouakchott,500.0,2022-05-03,21
+
+Transport taxi,Nouakchott,95.0,2022-05-03,22
+
+Carrotes,Maghama,150.0,2024-12-04,23
+
+Bergine,Rosso,160.0,2024-12-04,24
+
+Tomates,Rosso,170.0,2024-12-04,25
+
+Gazoile,Nouakchott,550.0,2024-12-04,26
+
+Essence,Nouakchott,605.0,2024-12-04,27
+
+Transport taxi,Nouakchott,150.0,2024-12-04,28

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+    <canvas id="myChart"></canvas>
+    <script>
+        // Récupérer les données importées du modèle Django
+        var importedData = {{ imported_data|safe }};
+
+        // Utiliser les données importées pour créer le graphique
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: importedData.dates,
+                datasets: [{
+                    label: importedData.productNames[0],  // Utiliser le nom du premier produit pour l'étiquette
+                    data: importedData.prices,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                }]
+            }
+        });
+    </script>
+</body>
+{% endblock %}
