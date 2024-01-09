@@ -322,7 +322,6 @@ def import_data(request):
 
         imported_data = dataset.load(new_prices.read().decode('utf-8'), format='csv')
         result = price_resource.import_data(dataset, dry_run=True)  # Test the data import
-
         if not result.has_errors():
             price_resource.import_data(dataset, dry_run=False)  # Actually import now
             # Afficher les lignes et les colonnes du fichier importé
@@ -477,3 +476,49 @@ def prices(request):
 def get_prices(request):
     data = get_price_data()
     return JsonResponse(data, safe=False)  # JsonResponse expects a dictionary -- use safe=False to allow list
+
+
+from .models import Family
+import io
+
+def family_import(request):
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Ce n\'est pas un fichier csv')
+            return redirect('family_import')
+
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+            _, created = Family.objects.update_or_create(
+                name=column[0],
+                description=column[1]
+            )
+        return redirect('family_list')
+    else:
+        return render(request, 'family_import.html')
+
+
+
+
+def family_export(request):
+    # Créer la réponse HTTP
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="families.csv"'
+
+    # Créer un écrivain CSV
+    writer = csv.writer(response)
+    # Écrire l'en-tête du fichier CSV
+    writer.writerow(['ID', 'Nom', 'Description'])
+
+    # Récupérer toutes les familles
+    families = Family.objects.all()
+
+    # Écrire chaque famille dans le fichier CSV
+    for family in families:
+        writer.writerow([family.id, family.name, family.description])
+
+    # Retourner la réponse
+    return response

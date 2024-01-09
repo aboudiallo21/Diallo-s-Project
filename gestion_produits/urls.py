@@ -45,4 +45,6 @@ urlpatterns = [
     path('chart/', ChartView.as_view(), name='chart'),
     path('prix/', views.get_prices, name='get_prices'),
     path('price_chart/', views.prices, name='prices'),
+    path('family/import/', views.family_import, name='family_import'),
+    path('family/export/', views.family_export, name='family_export'),
 ]
