@@ -5,12 +5,11 @@
 <div class="container mt-5">
     <h1 class="mb-4">Liste des Prix</h1>
 
-    <!-- Ajout du formulaire d'importation -->
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="csv_file" accept=".csv">
-        <button type="submit">Importer</button>
-    </form>
+    <!-- Ajouter les liens d'importation et d'exportation ici -->
+    <div class="mb-3">
+        <a href="{% url 'price_import' %}" class="btn btn-success">Importer des prix</a>
+        <a href="{% url 'price_export' %}" class="btn btn-info">Exporter des prix</a>
+    </div>
 
     <div class="row row-cols-1 row-cols-md-2 g-4">
         {% for price in prices %}
@@ -20,22 +19,6 @@
                         <h5 class="card-title">{{ price.product.name }}</h5>
                         <p class="card-text">Prix: {{ price.value }}</p>
                         <p class="card-text">Date: {{ price.date }}</p>
-                        <canvas id="chart-{{ price.product.name }}"></canvas>
-                        <script>
-                            var ctx = document.getElementById('chart-{{ price.product.name }}').getContext('2d');
-                            var chart = new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: [/* dates */],
-                                    datasets: [{
-                                        label: '{{ price.product.name }}',
-                                        data: [/* prices */],
-                                        borderColor: 'rgba(75, 192, 192, 1)',
-                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                    }]
-                                }
-                            });
-                        </script>
                         <div class="d-grid gap-2">
                             <a href="{% url 'price_detail' pk=price.pk %}" class="btn btn-outline-primary">Détails</a>
                             <a href="{% url 'price_edit' pk=price.pk %}" class="btn btn-outline-secondary">Modifier</a>

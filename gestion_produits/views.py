@@ -242,25 +242,27 @@ def pointvente_add(request):
     return render(request, 'pointvente_add.html', {'pointvente_form': pointvente_form})
 
 def pointvente_delete(request, pk):
-    pointvente = get_object_or_404(pointvente, pk=pk)
+    point_de_vente = get_object_or_404(pointvente, pk=pk)
     if request.method == 'POST':
-        pointvente.delete()
-        return redirect('pointvente_list')
-    return render(request, 'pointvente_delete.html', {'pointvente': pointvente})
+        point_de_vente.delete()
+        return redirect('pointvente_list')  # Redirige où vous voulez après la suppression
+    return render(request, 'pointvente_delete.html', {'pointvente': point_de_vente})
+
 
 
 
 def pointvente_edit(request, pk):
-    pointvente = get_object_or_404(pointvente, pk=pk)
+    point_de_vente = get_object_or_404(pointvente, pk=pk)
     if request.method == "POST":
-        form = pointventeForm(request.POST, instance=pointvente)
+        form = point_de_venteForm(request.POST, instance=pointvente)
         if form.is_valid():
-            pointvente = form.save(commit=False)
-            pointvente.save()
+            point_de_vente = form.save(commit=False)
+            point_de_vente.save()
             return redirect('pointvente_list')
     else:
         form = pointventeForm(instance=pointvente)
-    return render(request, 'pointvente_edit.html', {'form': form})
+    return render(request, 'pointvente_edit.html', {'pointvente': point_de_vente})
+
 
 def dashboard(request):
     # Récupérer les données des prix et des noms de produits
@@ -562,6 +564,181 @@ def product_export(request):
     # Écrire chaque produit dans le fichier CSV
     for product in products:
         writer.writerow([product.code_name, product.name, product.description, product.family.name])
+
+    # Retourner la réponse
+    return response
+
+
+def panier_import(request):
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Ce n\'est pas un fichier csv')
+            return redirect('panier_import')
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+            panier, created = Panier.objects.update_or_create(
+                code_panier=column[0],
+                label=column[1],
+                description=column[2]
+            )
+            # Pour chaque produit dans la liste de produits, ajoutez-le au panier
+            for product_name in column[3].split(';'):
+                product = Product.objects.get(name=product_name.strip())
+                panier.products.add(product)
+        return redirect('panier_list')
+    else:
+        return render(request, 'panier_import.html')
+
+def panier_export(request):
+    # Créer la réponse HTTP
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="paniers.csv"'
+
+    # Créer un écrivain CSV
+    writer = csv.writer(response)
+    # Écrire l'en-tête du fichier CSV
+    writer.writerow(['Code Panier', 'Label', 'Description', 'Produits'])
+
+    # Récupérer tous les paniers
+    paniers = Panier.objects.all()
+
+    # Écrire chaque panier dans le fichier CSV
+    for panier in paniers:
+        products = ";".join([str(product) for product in panier.products.all()])
+        writer.writerow([panier.code_panier, panier.label, panier.description, products])
+
+    # Retourner la réponse
+    return response
+
+def ponderation_import(request):
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Ce n\'est pas un fichier csv')
+            return redirect('ponderation_import')
+
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+            product = Product.objects.get(name=column[0].strip())
+            panier = Panier.objects.get(code_panier=column[1].strip())
+            ponderation, created = Ponderation.objects.update_or_create(
+                product=product,
+                panier=panier,
+                ponderation=float(column[2])
+            )
+        return redirect('ponderation_list')
+    else:
+        return render(request, 'ponderation_import.html')
+
+
+def ponderation_export(request):
+    # Créer la réponse HTTP
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="ponderations.csv"'
+
+    # Créer un écrivain CSV
+    writer = csv.writer(response)
+    # Écrire l'en-tête du fichier CSV
+    writer.writerow(['Produit', 'Panier', 'Pondération'])
+
+    # Récupérer toutes les pondérations
+    ponderations = Ponderation.objects.all()
+
+    # Écrire chaque pondération dans le fichier CSV
+    for ponderation in ponderations:
+        writer.writerow([ponderation.product.name, ponderation.panier.code_panier, ponderation.ponderation])
+
+    # Retourner la réponse
+    return response
+
+
+def pointvente_import(request):
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Ce n\'est pas un fichier csv')
+            return redirect('pointvente_import')
+
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+            _, created = pointvente.objects.update_or_create(
+                zone=column[0],
+                gps=column[1],
+                wilaya=column[2],
+                mougataa=column[3]
+            )
+        return redirect('pointvente_list')
+    else:
+        return render(request, 'pointvente_import.html')
+
+
+def pointvente_export(request):
+    # Créer la réponse HTTP
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="pointventes.csv"'
+
+    # Créer un écrivain CSV
+    writer = csv.writer(response)
+    # Écrire l'en-tête du fichier CSV
+    writer.writerow(['Zone', 'GPS', 'Wilaya', 'Mougataa'])
+
+    # Récupérer tous les points de vente
+    points_de_vente = pointvente.objects.all()
+
+    # Écrire chaque point de vente dans le fichier CSV
+    for point_de_vente in points_de_vente:
+        writer.writerow([point_de_vente.zone, point_de_vente.gps, point_de_vente.wilaya, point_de_vente.mougataa])
+
+    # Retourner la réponse
+    return response
+
+
+def price_import(request):
+    if request.method == 'POST':
+        csv_file = request.FILES['file']
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Ce n\'est pas un fichier csv')
+            return redirect('price_import')
+
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+        for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+            _, created = Price.objects.update_or_create(
+                value=column[0],
+                date=column[1],
+                product=Product.objects.get(name=column[2]),
+                zone=pointvente.objects.get(zone=column[3]),
+                ponderation=Ponderation.objects.get(id=column[4])
+            )
+        return redirect('price_list')
+    else:
+        return render(request, 'price_import.html')
+
+
+def price_export(request):
+    # Créer la réponse HTTP
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="prices.csv"'
+
+    # Créer un écrivain CSV
+    writer = csv.writer(response)
+    # Écrire l'en-tête du fichier CSV
+    writer.writerow(['Valeur', 'Date', 'Produit', 'Zone', 'Pondération'])
+
+    # Récupérer tous les prix
+    prices = Price.objects.all()
+
+    # Écrire chaque prix dans le fichier CSV
+    for price in prices:
+        writer.writerow([price.value, price.date, price.product.name, price.zone.zone, price.ponderation.id])
 
     # Retourner la réponse
     return response

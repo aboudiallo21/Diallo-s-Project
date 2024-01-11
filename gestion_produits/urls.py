@@ -49,4 +49,12 @@ urlpatterns = [
     path('family/export/', views.family_export, name='family_export'),
     path('product/import/', views.product_import, name='product_import'),
     path('product/export/', views.product_export, name='product_export'),
+    path('panier/import/', views.panier_import, name='panier_import'),
+    path('panier/export/', views.panier_export, name='panier_export'),
+    path('ponderation/import/', views.ponderation_import, name='ponderation_import'),
+    path('ponderation/export/', views.ponderation_export, name='ponderation_export'),
+    path('pointvente/import/', views.pointvente_import, name='pointvente_import'),
+    path('pointvente/export/', views.pointvente_export, name='pointvente_export'),
+    path('price/import/', views.price_import, name='price_import'),
+    path('price/export/', views.price_export, name='price_export'),
 ]

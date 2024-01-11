@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Importer des Points de Vente</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="file" class="form-label">Sélectionnez un fichier CSV</label>
+            <input class="form-control" type="file" id="file" name="file">
+        </div>
+        <button type="submit" class="btn btn-primary">Importer</button>
+    </form>
+</div>
+{% endblock %}

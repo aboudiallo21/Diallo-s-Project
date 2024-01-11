@@ -6,6 +6,11 @@
 <div class="container mt-5">
     <h1 class="mb-4">Liste des Points de Vente</h1>
 
+    <!-- Ajoutez votre bouton d'importation ici -->
+    <a href="{% url 'pointvente_import' %}" class="btn btn-secondary mb-3">Importer des Points de Vente</a>
+    <!-- Ajoutez votre bouton d'exportation ici -->
+    <a href="{% url 'pointvente_export' %}" class="btn btn-primary mb-3">Exporter les Points de Vente</a>
+
     <div class="row row-cols-1 row-cols-md-2 g-4">
         {% for point_de_vente in points_de_vente %}
             <div class="col">

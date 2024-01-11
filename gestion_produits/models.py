@@ -25,7 +25,6 @@ class Panier(models.Model):
     DEFAULT_CODE_PANIER = 'DEFAULT_CODE_PANIER'
     DEFAULT_LABEL = 'DEFAULT_LABEL'
     DEFAULT_DESCRIPTION = 'DEFAULT_DESCRIPTION'
-
     code_panier = models.CharField(max_length=100, default=DEFAULT_CODE_PANIER)
     label = models.CharField(max_length=100, default=DEFAULT_LABEL)
     description = models.TextField(default=DEFAULT_DESCRIPTION)

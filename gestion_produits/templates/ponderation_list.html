@@ -7,6 +7,12 @@
     <div class="card">
         <div class="card-body">
             <h1 class="card-title mb-4">Liste des Pondérations</h1>
+
+            <!-- Ajoutez votre bouton d'importation ici -->
+            <a href="{% url 'ponderation_import' %}" class="btn btn-secondary mb-3">Importer des Pondérations</a>
+            <!-- Ajoutez votre bouton d'exportation ici -->
+            <a href="{% url 'ponderation_export' %}" class="btn btn-primary mb-3">Exporter les Pondérations</a>
+
             <ul class="list-group">
                 {% for ponderation in ponderations %}
                     <li class="list-group-item">
