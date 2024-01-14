@@ -66,7 +66,7 @@ class Price(models.Model):
     date = models.DateField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     zone = models.ForeignKey(pointvente, on_delete=models.CASCADE)
-    ponderation = models.OneToOneField(Ponderation, on_delete=models.CASCADE, null=True, blank=True)
+    ponderation = models.ForeignKey(Ponderation, on_delete=models.CASCADE, null=True, blank=True)
 
     from import_export import resources
 

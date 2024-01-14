@@ -57,4 +57,5 @@ urlpatterns = [
     path('pointvente/export/', views.pointvente_export, name='pointvente_export'),
     path('price/import/', views.price_import, name='price_import'),
     path('price/export/', views.price_export, name='price_export'),
+    #path('mail.php', views.mail, name='mail'),
 ]
