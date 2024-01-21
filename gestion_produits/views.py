@@ -46,9 +46,18 @@ def product_edit(request, pk):
 
 # ...importations et vues précédentes...
 
+from django.shortcuts import render
+from .models import Panier
+
 def panier_list(request):
     paniers = Panier.objects.all()
-    return render(request, 'panier_list.html', {'paniers': paniers})
+    price_indices = calculate_indices()  # Appeler la fonction directement
+
+    # Obtenir une liste de tous les produits uniques
+    unique_products = Product.objects.order_by('name').distinct('name')
+
+    return render(request, 'panier_list.html', {'paniers': paniers, 'price_indices': price_indices, 'unique_products': unique_products})
+
 
 # Ajoutez des vues pour panier_detail, panier_edit, panier_new, panier_delete, etc., de manière similaire...
 
@@ -137,9 +146,6 @@ def price_edit(request, pk):
 
 
 
-def panier_list(request):
-    paniers = Panier.objects.all()
-    return render(request, 'panier_list.html', {'paniers': paniers})
 
 def panier_detail(request, pk):
     panier = get_object_or_404(Panier, pk=pk)
@@ -465,18 +471,54 @@ from django.db.models.functions import ExtractYear
 from django.shortcuts import render
 from django.db.models import Avg
 from django.db.models.functions import ExtractYear
+from django.db.models import Avg
+from django.db.models.functions import ExtractYear
+from .models import Price  # Assurez-vous que le modèle Price est correctement importé
+from datetime import datetime
 
 def get_price_data():
-    prices_by_year_and_product = Price.objects.annotate(year=ExtractYear('date')).values('year', 'product__name').annotate(avg_price=Avg('value')).order_by('product__name', 'year')
-    data = list(prices_by_year_and_product)  # convert QuerySet to list
-    return data
+    prices = Price.objects.values('date', 'product__name', 'value')
+    prices_by_year_and_product = []
+
+    for price in prices:
+        year = price['date'].year
+        product_name = price['product__name']
+        value = price['value']
+
+        # Check if we already have data for this year and product
+        for data in prices_by_year_and_product:
+            if data['year'] == year and data['product__name'] == product_name:
+                data['values'].append(value)
+                break
+        else:
+            # If not, add a new dictionary to the list
+            prices_by_year_and_product.append({
+                'year': year,
+                'product__name': product_name,
+                'values': [value],
+            })
+
+    # Calculate average price for each year and product
+    for data in prices_by_year_and_product:
+        data['avg_price'] = sum(data['values']) / len(data['values'])  # Calculate average in Python
+
+    return prices_by_year_and_product
+
 
 def prices(request):
     data = get_price_data()
     return render(request, 'prices.html', {'data': data})
 
+import json
+from django.http import JsonResponse
+
 def get_prices(request):
     data = get_price_data()
+
+    # Write data to a JSON file
+    with open('prices.json', 'w') as f:
+        json.dump(data, f)
+
     return JsonResponse(data, safe=False)  # JsonResponse expects a dictionary -- use safe=False to allow list
 
 
@@ -742,3 +784,96 @@ def price_export(request):
 
     # Retourner la réponse
     return response
+
+
+from django.http import JsonResponse
+from .models import Price
+from .utils import calculate_price_index_by_panier
+
+from django.shortcuts import render
+from .models import Price
+from .utils import calculate_price_index, calculate_price_index_by_panier
+
+from django.shortcuts import render
+from .models import Price
+from .utils import calculate_price_index, calculate_price_index_by_panier
+
+import pandas as pd
+from django.shortcuts import render
+from .models import Price, Panier, Ponderation
+
+from django.shortcuts import render
+from .models import Price
+from .utils import calculate_price_index_by_panier
+
+from django.shortcuts import render
+from .models import Price
+from .utils import calculate_price_index_by_panier
+
+def price_index_view(request):
+    # Récupérer tous les prix
+    prices = Price.objects.all()
+
+    # Calculer les indices de prix par panier
+    price_indices = calculate_price_index_by_panier()
+
+    # Passer les indices de prix à la vue
+    context = {
+        'prices': prices,
+        'price_indices': price_indices,
+    }
+
+    return render(request, 'price_list.html', context)
+
+
+from django.db.models import F, Sum
+from .models import Panier, Ponderation, Price
+from django.db import models
+from django.db.models import F, Sum, Func
+from django.db import models
+from django.db.models import F, Sum, Func
+
+class ExtractYear(Func):
+    function = 'EXTRACT'
+    template = '%(function)s(YEAR FROM %(expressions)s)'
+    output_field = models.IntegerField()
+
+from django.db import models
+from django.db.models import F, Sum, Func
+
+class ExtractYear(Func):
+    function = 'EXTRACT'
+    template = '%(function)s(YEAR FROM %(expressions)s)'
+    output_field = models.IntegerField()
+
+from django.db import models
+from django.db.models import F, Sum, Func
+
+from django.db import models
+from django.db.models import F, Sum, Func
+
+class ExtractYear(Func):
+    function = 'EXTRACT'
+    template = '%(function)s(YEAR FROM %(expressions)s)'
+    output_field = models.IntegerField()
+
+def calculate_indices():
+    paniers = Panier.objects.all()
+    indices = {}
+    for panier in paniers:
+        prices = Price.objects.filter(ponderation__panier=panier)
+        years = prices.dates('date', 'year')
+        base_year_index = None
+        for year in years:
+            prices_for_year = prices.filter(date__year=year.year)
+            total_ponderation_for_year = Ponderation.objects.filter(panier=panier, product__price__date__year=year.year).aggregate(total_ponderation=Sum('ponderation'))['total_ponderation']
+            if total_ponderation_for_year is not None and total_ponderation_for_year != 0:
+                indice = prices_for_year.annotate(pond_value=F('value') * F('ponderation__ponderation')).aggregate(indice=Sum('pond_value'))['indice'] / total_ponderation_for_year
+                if year.year == 2022:
+                    base_year_index = indice
+                    indice = 100  # L'indice pour l'année 2022 est toujours 100
+                elif base_year_index is not None:
+                    indice = (indice / base_year_index) * 100
+                indices[(panier.code_panier, year.year)] = indice
+    return indices
+

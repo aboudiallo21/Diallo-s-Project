@@ -3,13 +3,15 @@
 {% block title %}Liste des Paniers{% endblock %}
 
 {% block content %}
-<div class="container mt-5" style="margin-top: 5cm;">
+<div class="container mt-5" style="padding-top: 2cm;">
     <h1>Liste des Paniers</h1>
 
-    <!-- Ajoutez votre bouton d'importation ici -->
-    <a href="{% url 'panier_import' %}" class="btn btn-secondary mb-3">Importer des Paniers</a>
-    <!-- Ajoutez votre bouton d'exportation ici -->
-    <a href="{% url 'panier_export' %}" class="btn btn-primary mb-3">Exporter les Paniers</a>
+    <a href="{% url 'panier_import' %}" class="btn btn-secondary mb-3" aria-label="Importer des Paniers">
+        <i class="fas fa-download" aria-hidden="true"></i> Importer des Paniers
+    </a>
+    <a href="{% url 'panier_export' %}" class="btn btn-primary mb-3" aria-label="Exporter les Paniers">
+        <i class="fas fa-file-export" aria-hidden="true"></i> Exporter les Paniers
+    </a>
 
     <ul class="list-group">
         {% for panier in paniers %}
@@ -17,23 +19,47 @@
                 <h5>Code Panier: {{ panier.code_panier }}</h5>
                 <p>Label: {{ panier.label }}</p>
                 <p>Description: {{ panier.description }}</p>
-                <!-- Affichage des produits liés à ce panier -->
                 <ul>
                     {% for product in panier.products.all %}
                         <li>{{ product.name }}</li>
-                        <!-- Vous pouvez afficher d'autres détails du produit si nécessaire -->
                     {% empty %}
                         <li>Aucun produit sélectionné pour ce panier.</li>
                     {% endfor %}
                 </ul>
-                <a href="{% url 'panier_edit' pk=panier.pk %}" class="btn btn-sm btn-outline-primary me-2">Modifier</a>
-                <a href="{% url 'panier_delete' pk=panier.pk %}" class="btn btn-sm btn-outline-danger">Supprimer</a>
+                <a href="{% url 'panier_edit' pk=panier.pk %}" class="btn btn-sm btn-outline-primary me-2" aria-label="Modifier">
+                    <i class="fas fa-edit" aria-hidden="true"></i> Modifier
+                </a>
+                <a href="{% url 'panier_delete' pk=panier.pk %}" class="btn btn-sm btn-outline-danger" aria-label="Supprimer">
+                    <i class="fas fa-trash" aria-hidden="true"></i> Supprimer
+                </a>
             </li>
         {% empty %}
             <li class="list-group-item">Aucun panier disponible pour le moment.</li>
         {% endfor %}
     </ul>
 
-    <a href="{% url 'panier_add' %}" class="btn btn-primary mt-3">Ajouter un panier</a>
+    <h2 class="mt-5">Indices de Prix pour chaque Panier</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Code Panier</th>
+                <th scope="col">Année</th>
+                <th scope="col">Indice</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, indice in price_indices.items %}
+                <tr>
+                    <td>{{ key.0 }}</td>
+                    <td>{{ key.1 }}</td>
+                    <td>{{ indice }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'panier_add' %}" class="btn btn-primary mt-3" aria-label="Ajouter un panier">
+        <i class="fas fa-plus" aria-hidden="true"></i> Ajouter un panier
+    </a>
 </div>
 {% endblock %}

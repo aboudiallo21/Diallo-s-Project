@@ -53,6 +53,15 @@
                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                 borderColor: 'rgba(75, 192, 192, 1)',
                                 borderWidth: 1
+                            },
+                            {
+                                label: 'Prix moyen de ' + product,
+                                data: avg_prices,
+                                type: 'line',  // Ajoutez cette ligne pour créer un tracé de ligne
+                                fill: false,  // Assurez-vous que la zone sous la ligne n'est pas remplie
+                                borderColor: 'rgba(255, 99, 132, 1)',  // Choisissez une couleur pour la ligne
+                                borderWidth: 2,
+                                pointRadius: 3  // Choisissez une taille pour les points
                             }]
                         },
                         options: {

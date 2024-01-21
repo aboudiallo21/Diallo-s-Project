@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
-{% block content %}
+
 {% block title %}Liste des Prix{% endblock %}
 
+{% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">Liste des Prix</h1>
 
-    <!-- Ajouter les liens d'importation et d'exportation ici -->
     <div class="mb-3">
-        <a href="{% url 'price_import' %}" class="btn btn-success">Importer des prix</a>
-        <a href="{% url 'price_export' %}" class="btn btn-info">Exporter des prix</a>
+        <a href="{% url 'price_import' %}" class="btn btn-success" aria-label="Importer des prix">
+            <i class="fas fa-download" aria-hidden="true"></i> Importer des prix
+        </a>
+        <a href="{% url 'price_export' %}" class="btn btn-info" aria-label="Exporter des prix">
+            <i class="fas fa-file-export" aria-hidden="true"></i> Exporter des prix
+        </a>
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -20,8 +24,12 @@
                         <p class="card-text">Prix: {{ price.value }}</p>
                         <p class="card-text">Date: {{ price.date }}</p>
                         <div class="d-grid gap-2">
-                            <a href="{% url 'price_detail' pk=price.pk %}" class="btn btn-outline-primary">Détails</a>
-                            <a href="{% url 'price_edit' pk=price.pk %}" class="btn btn-outline-secondary">Modifier</a>
+                            <a href="{% url 'price_detail' pk=price.pk %}" class="btn btn-outline-primary" aria-label="Détails">
+                                <i class="fas fa-info-circle" aria-hidden="true"></i> Détails
+                            </a>
+                            <a href="{% url 'price_edit' pk=price.pk %}" class="btn btn-outline-secondary" aria-label="Modifier">
+                                <i class="fas fa-edit" aria-hidden="true"></i> Modifier
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -31,26 +39,30 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <p class="card-text fs-5">Aucun prix disponible pour le moment.</p>
-                        <a href="{% url 'price_add' %}" class="btn btn-primary">Ajouter un prix</a>
+                        <a href="{% url 'price_add' %}" class="btn btn-primary" aria-label="Ajouter un prix">
+                            <i class="fas fa-plus" aria-hidden="true"></i> Ajouter un prix
+                        </a>
                     </div>
                 </div>
             </div>
         {% endfor %}
 
-        {% if prices %}
+        {% for code_panier, indice in price_indices.items %}
             <div class="col">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">Indice de Prix</h5>
-                        <p class="card-text">Indice: {{ price_index }}</p>
+                        <h5 class="card-title">Indice de Prix pour le Panier {{ code_panier }}</h5>
+                        <p class="card-text">Indice: {{ indice }}</p>
                     </div>
                 </div>
             </div>
-        {% endif %}
+        {% endfor %}
 
     </div>
     <div class="col mt-3">
-        <a href="{% url 'price_add' %}" class="btn btn-primary">Ajouter un prix</a>
+        <a href="{% url 'price_add' %}" class="btn btn-primary" aria-label="Ajouter un prix">
+            <i class="fas fa-plus" aria-hidden="true"></i> Ajouter un prix
+        </a>
     </div>
 </div>
 {% endblock %}
