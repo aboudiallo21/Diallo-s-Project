@@ -9,9 +9,13 @@
             <h1 class="card-title mb-4">Liste des Pondérations</h1>
 
             <!-- Ajoutez votre bouton d'importation ici -->
-            <a href="{% url 'ponderation_import' %}" class="btn btn-secondary mb-3">Importer des Pondérations</a>
+            <a href="{% url 'ponderation_import' %}" class="btn btn-secondary mb-3">
+                <i class="fas fa-download"></i> Importer des Pondérations
+            </a>
             <!-- Ajoutez votre bouton d'exportation ici -->
-            <a href="{% url 'ponderation_export' %}" class="btn btn-primary mb-3">Exporter les Pondérations</a>
+            <a href="{% url 'ponderation_export' %}" class="btn btn-primary mb-3">
+                <i class="fas fa-upload"></i> Exporter les Pondérations
+            </a>
 
             <ul class="list-group">
                 {% for ponderation in ponderations %}
@@ -21,8 +25,12 @@
                         <p>Panier: {{ ponderation.panier.label }}</p>
                         <p>Pondération: {{ ponderation.ponderation }}</p>
                         <!-- Ajoutez ici des liens pour éditer ou supprimer la pondération -->
-                        <a href="{% url 'ponderation_edit' pk=ponderation.pk %}">Éditer</a>
-                        <a href="{% url 'ponderation_delete' pk=ponderation.pk %}">Supprimer</a>
+                        <a href="{% url 'ponderation_edit' pk=ponderation.pk %}">
+                            <i class="fas fa-edit"></i> Éditer
+                        </a>
+                        <a href="{% url 'ponderation_delete' pk=ponderation.pk %}">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </a>
                     </li>
                 {% empty %}
                     <li class="list-group-item">Aucune pondération disponible pour le moment.</li>
@@ -35,7 +43,9 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title mb-4">Ajouter une nouvelle pondération</h2>
-                <a href="{% url 'ponderation_add' %}" class="btn btn-primary">Ajouter une pondération</a>
+                <a href="{% url 'ponderation_add' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Ajouter une pondération
+                </a>
             </div>
         </div>
     </div>

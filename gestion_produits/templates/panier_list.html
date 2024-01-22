@@ -20,7 +20,7 @@
                 <p>Label: {{ panier.label }}</p>
                 <p>Description: {{ panier.description }}</p>
                 <ul>
-                    {% for product in panier.products.all %}
+                    {% for product in panier.products.all|slice:":4" %}
                         <li>{{ product.name }}</li>
                     {% empty %}
                         <li>Aucun produit sélectionné pour ce panier.</li>

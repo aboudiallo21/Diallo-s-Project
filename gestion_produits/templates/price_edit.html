@@ -10,20 +10,7 @@
 
             <form method="post">
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label for="id_code_price" class="form-label"> Price:{{ price.product.name }}</label>
-
-                </div>
-                <div class="mb-3">
-                    <label for="id_value" class="form-label">Value</label>
-                    {{ form.value }}
-                </div>
-                <div class="mb-3">
-                    <label for="id_date" class="form-label">Date</label>
-                    {{ form.date }}
-                </div>
-                <!-- Ajoutez d'autres champs du formulaire si nécessaire -->
-
+                {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
             </form>
         </div>

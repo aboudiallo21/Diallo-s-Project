@@ -5,9 +5,15 @@
 {% block content %}
 <div class="container" style="margin-top: 3cm;">
     <h1>Liste des Familles de Produits</h1>
-    <a href="{% url 'family_new' %}" class="btn btn-primary mb-3">Nouvelle Famille</a>
-    <a href="{% url 'family_export' %}" class="btn btn-primary mb-3">Exporter les Familles</a>
-    <a href="{% url 'family_import' %}" class="btn btn-secondary mb-3">Importer des Familles</a>
+    <a href="{% url 'family_new' %}" class="btn btn-primary mb-3">
+        <i class="fas fa-plus"></i> Nouvelle Famille
+    </a>
+    <a href="{% url 'family_export' %}" class="btn btn-primary mb-3">
+        <i class="fas fa-upload"></i> Exporter les Familles
+    </a>
+    <a href="{% url 'family_import' %}" class="btn btn-secondary mb-3">
+        <i class="fas fa-download"></i> Importer des Familles
+    </a>
 
     <table class="table">
         <!-- Table header -->
@@ -29,10 +35,14 @@
                 <td>{{ family.description }}</td>
                 <!-- Affichez d'autres données si nécessaire -->
                 <td>
-                    <a href="{% url 'family_edit' pk=family.pk %}" class="btn btn-sm btn-outline-primary me-2">Éditer</a>
+                    <a href="{% url 'family_edit' pk=family.pk %}" class="btn btn-sm btn-outline-primary me-2">
+                        <i class="fas fa-edit"></i> Éditer
+                    </a>
                     <form action="{% url 'family_delete' pk=family.pk %}" method="post" class="d-inline">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette famille de produits ?')">Supprimer</button>
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette famille de produits ?')">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
                     </form>
                 </td>
             </tr>

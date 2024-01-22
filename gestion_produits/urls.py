@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 from django.urls import path
 from .views import ChartView
-
+from .views import price_delete
+from .views import price_edit
 #from .views import line_chart, line_chart_json
 urlpatterns = [
     path('', views.house, name='house'),
@@ -58,4 +59,6 @@ urlpatterns = [
     path('price/import/', views.price_import, name='price_import'),
     path('price/export/', views.price_export, name='price_export'),
     #path('mail.php', views.mail, name='mail'),
+    path('price/delete/<int:pk>/', price_delete, name='price_delete'),
+    path('price/edit/<int:pk>/', price_edit, name='price_edit'),
 ]

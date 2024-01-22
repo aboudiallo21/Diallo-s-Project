@@ -132,6 +132,10 @@ def price_detail(request, pk):
     price = get_object_or_404(Price, pk=pk)
     return render(request, 'price_detail.html', {'price': price})
 
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Price
+from .forms import PriceForm
+
 def price_edit(request, pk):
     price = get_object_or_404(Price, pk=pk)
     if request.method == "POST":
@@ -857,6 +861,11 @@ class ExtractYear(Func):
     template = '%(function)s(YEAR FROM %(expressions)s)'
     output_field = models.IntegerField()
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.db.models import F, Sum
+from .models import Price, Panier, Ponderation
+
 def calculate_indices():
     paniers = Panier.objects.all()
     indices = {}
@@ -874,6 +883,49 @@ def calculate_indices():
                     indice = 100  # L'indice pour l'année 2022 est toujours 100
                 elif base_year_index is not None:
                     indice = (indice / base_year_index) * 100
+                # Round the indice to 2 decimal places
+                indice = round(indice, 2)
                 indices[(panier.code_panier, year.year)] = indice
     return indices
 
+@receiver(post_save, sender=Price)
+def update_indices(sender, instance, created, **kwargs):
+    if created:
+        calculate_indices()
+
+
+
+def calculate_global_indices_and_inflation(indices):
+    # Calculate the global price index per year
+    global_indices = {}
+    for key, indice in indices.items():
+        year = key[1]
+        if year not in global_indices:
+            global_indices[year] = []
+        global_indices[year].append(indice)
+    for year, indice_list in global_indices.items():
+        global_indices[year] = round(sum(indice_list) / len(indice_list), 2)
+
+    # Calculate the inflation rate per year
+    inflation_rates = {}
+    sorted_years = sorted(global_indices.keys())
+    for i in range(1, len(sorted_years)):
+        previous_year = sorted_years[i - 1]
+        current_year = sorted_years[i]
+        inflation_rate = ((global_indices[current_year] - global_indices[previous_year]) / global_indices[previous_year]) * 100
+        inflation_rates[current_year] = round(inflation_rate, 2)
+
+    return global_indices, inflation_rates
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Price
+
+def price_delete(request, pk):
+    price = get_object_or_404(Price, pk=pk)
+    if request.method == 'POST':
+        price.delete()
+        messages.success(request, 'Le prix a été supprimé avec succès.')
+        return redirect('price_list')
+    return render(request, 'price_delete.html', {'price': price})
